@@ -1,0 +1,17 @@
+{
+  "name": "frontier-address-registry",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.3",
+    "pg": "^7.4.3",
+    "semver": "^5.5.1",
+    "wallet-address-validator": "^0.2.0"
+  }
+}
