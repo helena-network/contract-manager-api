@@ -78,7 +78,7 @@ app.get('/contract-manager/contracts/address', function (req, res) {
 
 /*
 Inputs:
-  - address: contract address
+  - version: contract version
 Returns all the contract's information
 */
 app.get('/contract-manager/contracts/version', function (req, res) {
@@ -106,8 +106,10 @@ app.get('/contract-manager/contracts/name/version', function (req, res) {
 
 /*
 Inputs:
-  - name: contract's name
-  - address: contract's address
+  - contract object:
+    name: String
+    version: String
+    abi: Object
 Returns all the contract's information
 */
 app.post('/contract-manager/deploy', async function (req, res) {
