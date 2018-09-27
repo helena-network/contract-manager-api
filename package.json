@@ -4,13 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "express": "^4.16.3",
+    "mocha": "^5.2.0",
     "pg": "^7.4.3",
+    "request": "^2.88.0",
     "semver": "^5.5.1",
     "wallet-address-validator": "^0.2.0"
   }

@@ -39,6 +39,20 @@ async function queryGetContractsByName (name) {
   return res
 }
 
+async function queryGetLatestContractByName (name) {
+  const text = "SELECT contract_name, version, address, abi FROM   contract_registry WHERE contract_name=$1 ORDER  BY string_to_array(version, '.')::int[] DESC LIMIT 1;"
+  const values = [name]
+  let res = null
+
+  try {
+    res = await pool.query(text, values)
+    return res.rows
+  } catch (e) {
+    console.log(e)
+  }
+  return res
+}
+
 async function queryGetContractsByVersion (version) {
   const text = 'select * from contract_registry where version=$1;'
   const values = [version]
@@ -121,21 +135,33 @@ async function transactionAddNewContract (name = 'no_name', version, abi, addres
     throw e
   } finally {
     client.release()
+    return name + '-' + version + '-' + address
   }
 }
-/*
-queryGetContractsByNameAndVersion('test-contract-1', '0.0.1').then(res => {
-  console.log(res)
-})
-*/
-// transactionAddNewContract('new-contract', '0.0.1', TRLContract, '0xa2ab1ac4862e3e04bb3e6100c41631eafc011877').then(console.log)
 
-// console.log(JSON.parse(JSON.stringify(TRLContract)))
-// console.log(checkParams(['new-contract', '0.0.1', JSON.stringify(TRLContract), '0xa2ab1ac4862e3e04bb3e6100c41631eafc011877']))
+async function transactionDeleteTestFiles () {
+  const text = "DELETE FROM contract_registry WHERE contract_name LIKE'test-name-%';"
 
+  const client = await pool.connect()
+
+  try {
+    await client.query('BEGIN')
+    await client.query(text)
+    await client.query('COMMIT')
+  } catch (e) {
+    await client.query('ROLLBACK')
+    throw e
+  } finally {
+    client.release()
+    return 'success'
+  }
+}
+
+module.exports.transactionDeleteTestFiles = transactionDeleteTestFiles
 module.exports.queryGetAllContracts = queryGetAllContracts
 module.exports.queryGetContractsByName = queryGetContractsByName
 module.exports.queryGetContractsByNameAndVersion = queryGetContractsByNameAndVersion
 module.exports.transactionAddNewContract = transactionAddNewContract
 module.exports.queryGetContractsByAddress = queryGetContractsByAddress
 module.exports.queryGetContractsByVersion = queryGetContractsByVersion
+module.exports.queryGetLatestContractByName = queryGetLatestContractByName
