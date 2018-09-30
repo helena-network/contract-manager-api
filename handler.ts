@@ -5,7 +5,7 @@ import {
   queryGetContractsByAddress,
   queryGetContractsByVersion,
   queryGetContractsByNameAndVersion,
-  ransactionAddNewContract } from './services/resolver';
+  transactionAddNewContract } from './services/resolver';
 
 export const hello: Handler = (event: APIGatewayEvent, context: Context, cb: Callback) => {
   const response = {
@@ -144,7 +144,7 @@ export const deployContract: Handler = async (event: APIGatewayEvent, context: C
   let response;
   const msg = JSON.parse(event.body);
   try {
-    const contracts = await ransactionAddNewContract(msg.name, msg.version, msg.abi, msg.address)
+    const contracts = await transactionAddNewContract(msg.name, msg.version, msg.abi, msg.address)
     response = {
       statusCode: 200,
       body: contracts
