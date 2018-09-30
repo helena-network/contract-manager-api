@@ -1,17 +1,13 @@
-const { Pool, Client } = require('pg')
-const TRLContract = require('./TRL.json')
-const semver = require('semver')
-var EthereumValidator = require('wallet-address-validator')
+import { Pool } from 'pg';
+import semver from 'semver';
+import EthereumValidator from 'wallet-address-validator';
 
-// pools will use environment variables
-// for connection information
 const pool = new Pool()
-
 /*
 Read operations
 */
 
-async function queryGetAllContracts () {
+export async function queryGetAllContracts () {
   const text = 'select contract_name,version,address from contract_registry;'
   // const values = [name]
   let res = null
@@ -19,13 +15,14 @@ async function queryGetAllContracts () {
   try {
     res = await pool.query(text)
     return res.rows
-  } catch (e) {
-    console.log(e)
+  } catch (error) {
+    console.error(error);
+    return error;
   }
   return res
 }
 
-async function queryGetContractsByName (name) {
+export async function queryGetContractsByName (name) {
   const text = 'select * from contract_registry where contract_name=$1;'
   const values = [name]
   let res = null
@@ -33,27 +30,29 @@ async function queryGetContractsByName (name) {
   try {
     res = await pool.query(text, values)
     return res.rows
-  } catch (e) {
-    console.log(e)
+  } catch (error) {
+    console.error(error);
+    return error;
   }
   return res
 }
 
-async function queryGetLatestContractByName (name) {
-  const text = "SELECT contract_name, version, address, abi FROM   contract_registry WHERE contract_name=$1 ORDER  BY string_to_array(version, '.')::int[] DESC LIMIT 1;"
+export async function queryGetLatestContractByName (name) {
+  const text = "SELECT contract_name, version, address, abi FROM contract_registry WHERE contract_name=$1 ORDER  BY string_to_array(version, '.')::int[] DESC LIMIT 1;"
   const values = [name]
   let res = null
 
   try {
     res = await pool.query(text, values)
     return res.rows
-  } catch (e) {
-    console.log(e)
+  } catch (error) {
+    console.error(error);
+    return error;
   }
   return res
 }
 
-async function queryGetContractsByVersion (version) {
+export async function queryGetContractsByVersion (version) {
   const text = 'select * from contract_registry where version=$1;'
   const values = [version]
   let res = null
@@ -61,13 +60,14 @@ async function queryGetContractsByVersion (version) {
   try {
     res = await pool.query(text, values)
     return res.rows
-  } catch (e) {
-    console.log(e)
+  } catch (error) {
+    console.error(error);
+    return error;
   }
   return res
 }
 
-async function queryGetContractsByAddress (address) {
+export async function queryGetContractsByAddress (address) {
   const text = 'select * from contract_registry where address=$1;'
   const values = [address]
   let res = null
@@ -75,13 +75,14 @@ async function queryGetContractsByAddress (address) {
   try {
     res = await pool.query(text, values)
     return res.rows
-  } catch (e) {
-    console.log(e)
+  } catch (error) {
+    console.error(error);
+    return error;
   }
   return res
 }
 
-async function queryGetContractsByNameAndVersion (name, version) {
+export async function queryGetContractsByNameAndVersion (name, version) {
   const text = 'select * from contract_registry where contract_name=$1 and version=$2;'
   const values = [name, version]
   let res = null
@@ -89,8 +90,9 @@ async function queryGetContractsByNameAndVersion (name, version) {
   try {
     res = await pool.query(text, values)
     return res.rows
-  } catch (e) {
-    console.log(e)
+  } catch (error) {
+    console.error(error);
+    return error;
   }
   return res
 }
@@ -115,7 +117,7 @@ function checkParams (params) {
   return c1 && c2 && c3 && c4
 }
 
-async function transactionAddNewContract (name = 'no_name', version, abi, address = '0x0000000000000000000000000000000000000000') {
+export async function transactionAddNewContract (name = 'no_name', version, abi, address = '0x0000000000000000000000000000000000000000') {
   // const abi = JSON.stringify(TRLContract)
   const text = 'INSERT INTO contract_registry(contract_name, version, abi, address) VALUES ($1,$2,$3,$4);'
   const params = [name, version, JSON.stringify(abi), address]
@@ -130,16 +132,16 @@ async function transactionAddNewContract (name = 'no_name', version, abi, addres
     await client.query('BEGIN')
     await client.query(text, params)
     await client.query('COMMIT')
-  } catch (e) {
+  } catch (error) {
     await client.query('ROLLBACK')
-    throw e
+    throw error
   } finally {
     client.release()
     return name + '-' + version + '-' + address
   }
 }
 
-async function transactionDeleteTestFiles () {
+export async function transactionDeleteTestFiles () {
   const text = "DELETE FROM contract_registry WHERE contract_name LIKE'test-name-%';"
 
   const client = await pool.connect()
@@ -148,20 +150,11 @@ async function transactionDeleteTestFiles () {
     await client.query('BEGIN')
     await client.query(text)
     await client.query('COMMIT')
-  } catch (e) {
+  } catch (error) {
     await client.query('ROLLBACK')
-    throw e
+    throw error
   } finally {
     client.release()
     return 'success'
   }
 }
-
-module.exports.transactionDeleteTestFiles = transactionDeleteTestFiles
-module.exports.queryGetAllContracts = queryGetAllContracts
-module.exports.queryGetContractsByName = queryGetContractsByName
-module.exports.queryGetContractsByNameAndVersion = queryGetContractsByNameAndVersion
-module.exports.transactionAddNewContract = transactionAddNewContract
-module.exports.queryGetContractsByAddress = queryGetContractsByAddress
-module.exports.queryGetContractsByVersion = queryGetContractsByVersion
-module.exports.queryGetLatestContractByName = queryGetLatestContractByName
