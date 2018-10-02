@@ -25,6 +25,20 @@ async function queryGetAllContracts () {
   return res
 }
 
+async function queryGetAllContractsListened () {
+  const text = 'Select * from contract_registry where listen=true;'
+  // const values = [name]
+  let res = null
+
+  try {
+    res = await pool.query(text)
+    return res.rows
+  } catch (e) {
+    console.log(e)
+  }
+  return res
+}
+
 async function queryGetContractsByName (name) {
   const text = 'select * from contract_registry where contract_name=$1;'
   const values = [name]
@@ -165,3 +179,4 @@ module.exports.transactionAddNewContract = transactionAddNewContract
 module.exports.queryGetContractsByAddress = queryGetContractsByAddress
 module.exports.queryGetContractsByVersion = queryGetContractsByVersion
 module.exports.queryGetLatestContractByName = queryGetLatestContractByName
+module.exports.queryGetAllContractsListened = queryGetAllContractsListened

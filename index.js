@@ -18,9 +18,21 @@ var server = app.listen(APP_PORT, function () {
 /*
 No inputs
 Returns all the contrac's names, addresses and versions
+that are being listened to
 */
 app.get('/contract-manager/contracts/all', function (req, res) {
   resolver.queryGetAllContracts().then(contracts => {
+    console.log(contracts)
+    res.end(JSON.stringify(contracts))
+  })
+})
+
+/*
+No inputs
+Returns all the contrac's names, addresses and versions
+*/
+app.get('/contract-manager/contracts/listening', function (req, res) {
+  resolver.queryGetAllContractsListened().then(contracts => {
     console.log(contracts)
     res.end(JSON.stringify(contracts))
   })
