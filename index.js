@@ -67,6 +67,19 @@ Inputs:
   - name: contract name
 Returns all the contrac's names, addresses and versions
 */
+app.get('/contract-manager/contracts/tag', function (req, res) {
+  const tag = req.query.tag
+  resolver.queryGetContractsByTag(tag).then(contracts => {
+    console.log(contracts)
+    res.end(JSON.stringify(contracts))
+  })
+})
+
+/*
+Inputs:
+  - name: contract name
+Returns all the contrac's names, addresses and versions
+*/
 app.get('/contract-manager/contract/name/latest', function (req, res) {
   const name = req.query.name
   resolver.queryGetLatestContractByName(name).then(contracts => {
@@ -131,14 +144,16 @@ app.post('/contract-manager/deploy', async function (req, res) {
   // const abi = JSON.parse(req.body.abi)
   const abi = req.body.abi
   const address = req.body.address
+  const tag = req.body.tag
 
   let result = false
 
   try {
-    result = await resolver.transactionAddNewContract(name, version, abi, address)
+    result = await resolver.transactionAddNewContract(name, version, abi, address, tag)
     res.end(JSON.stringify(result))
   } catch (e) {
     console.log(e)
-    res.end(JSON.stringify({error: 'There was an error'}))
+    res.status(400).end()
+    // res.end(JSON.stringify({error: 'There was an error'}))
   }
 })

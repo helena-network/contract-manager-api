@@ -53,6 +53,20 @@ async function queryGetContractsByName (name) {
   return res
 }
 
+async function queryGetContractsByTag (tag) {
+  const text = 'SELECT contract_name, version, address from contract_registry where tag=$1;'
+  const values = [tag]
+  let res = null
+
+  try {
+    res = await pool.query(text, values)
+    return res.rows
+  } catch (e) {
+    console.log(e)
+  }
+  return res
+}
+
 async function queryGetLatestContractByName (name) {
   const text = "SELECT contract_name, version, address, abi FROM   contract_registry WHERE contract_name=$1 ORDER  BY string_to_array(version, '.')::int[] DESC LIMIT 1;"
   const values = [name]
@@ -129,10 +143,10 @@ function checkParams (params) {
   return c1 && c2 && c3 && c4
 }
 
-async function transactionAddNewContract (name = 'no_name', version, abi, address = '0x0000000000000000000000000000000000000000') {
+async function transactionAddNewContract (name = 'no_name', version, abi, address = '0x0000000000000000000000000000000000000000', tag) {
   // const abi = JSON.stringify(TRLContract)
-  const text = 'INSERT INTO contract_registry(contract_name, version, abi, address) VALUES ($1,$2,$3,$4);'
-  const params = [name, version, JSON.stringify(abi), address]
+  const text = 'INSERT INTO contract_registry(contract_name, version, abi, address,tag) VALUES ($1,$2,$3,$4,$5);'
+  const params = [name, version, JSON.stringify(abi), address, tag]
 
   if (!checkParams(params)) {
     return Promise.reject('Failed parameter verification')
@@ -180,3 +194,4 @@ module.exports.queryGetContractsByAddress = queryGetContractsByAddress
 module.exports.queryGetContractsByVersion = queryGetContractsByVersion
 module.exports.queryGetLatestContractByName = queryGetLatestContractByName
 module.exports.queryGetAllContractsListened = queryGetAllContractsListened
+module.exports.queryGetContractsByTag = queryGetContractsByTag

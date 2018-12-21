@@ -19,6 +19,8 @@ let abi_3
 let version_3
 let address_3
 
+const tag = 'unit-test'
+
 before('Populating database with example contracts', async function () {
   this.timeout(10000)
   name_1 = TEST_NAME_PREFIX + '1'
@@ -44,10 +46,10 @@ before('Populating database with example contracts', async function () {
   console.log("Give me sometime, I'm writting to a database on the other side of the world!")
   await clearTestFiles()
   await timeout(2000)
-  await addNewItem(name_1, abi_1, version_1, address_1)
-  await addNewItem(name_2, abi_2, version_2, address_2)
-  await addNewItem(name_3, abi_3, version_3, address_3)
-  await addNewItem(name_3, abi_4, version_4, address_4)
+  await addNewItem(name_1, abi_1, version_1, address_1, tag)
+  await addNewItem(name_2, abi_2, version_2, address_2, tag)
+  await addNewItem(name_3, abi_3, version_3, address_3, tag)
+  await addNewItem(name_3, abi_4, version_4, address_4, tag)
   await timeout(5000)
 })
 
@@ -121,7 +123,7 @@ async function getContractsByName (_name) {
   })
 }
 
-async function addNewItem (_name, _abi, _version, _address) {
+async function addNewItem (_name, _abi, _version, _address, _tag) {
   var options = { method: 'POST',
     url: HOST + '/contract-manager/deploy',
     headers:
@@ -131,7 +133,8 @@ async function addNewItem (_name, _abi, _version, _address) {
     { address: _address,
       version: _version,
       name: _name,
-      abi: _abi
+      abi: _abi,
+      tag: _tag
     },
     json: true }
 
