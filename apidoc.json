@@ -1,0 +1,7 @@
+{
+  "name": "contract-manager-api",
+  "version": "0.1.0",
+  "description": "Backend of the contract manager",
+  "title": "Contract Manager API",
+  "url" : "http://ec2-18-224-140-17.us-east-2.compute.amazonaws.com:9092"
+}
