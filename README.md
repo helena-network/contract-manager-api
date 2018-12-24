@@ -34,74 +34,13 @@ The tests are writting and reading the database directly, so it takes some time.
 
 ## Usage
 
-To use the webservice, make GET (or POST, for writes) HTTP requests to the following routes:
+The API exposed by this webservice is documented using [apidocjs](http://apidocjs.com/) and available in the `/docs` directory. It is currently not hosted on a public website for privacy reasons. So, in order to check the documents you'll need to locally host the webpage.
 
-### /contract-manager/contracts/all
+This can be done with 2 commands:
 
-No inputs
+```sh
+> npm install -g http-server
+> http-server docs
+```
+Then, head over to http://localhost:8080 🎉
 
-Returns all the contrac's names, addresses and versions
-
-
-
-### /contract-manager/clean-test-results
-
-No inputs
-
-Returns all the contrac's names, addresses and versions
-
-
-
-### /contract-manager/contracts/name
-
-Inputs:
-  - name: contract name
-
-Returns all the contrac's names, addresses and versions
-
-
-
-### /contract-manager/contract/name/latest
-
-Inputs:
-  - name: contract name
-
-Returns all the contrac's names, addresses and versions
-
-
-
-### /contract-manager/contracts/address
-
-Inputs:
-  - address: contract address
-
-Returns all the contract's information
-
-
-
-### /contract-manager/contracts/version
-
-Inputs:
-  - version: contract version
-
-Returns all the contract's information
-
-
-
-
-### /contract-manager/contracts/name/version
-
-Inputs:
-  - name: contract's name
-  - address: contract's address
-
-Returns all the contract's information
-
-### /contract-manager/deploy
-Inputs:
-  - contract object:
-    name: String
-    version: String
-    abi: Object
-
-Returns all the contract's information
