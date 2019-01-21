@@ -2,20 +2,26 @@
   "name": "frontier-address-registry",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "handler.js",
   "scripts": {
-    "test": "mocha",
-    "start": "node index.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.18.3",
-    "express": "^4.16.3",
-    "mocha": "^5.2.0",
+    "aws-lambda": "^0.1.2",
     "pg": "^7.4.3",
-    "request": "^2.88.0",
     "semver": "^5.5.1",
-    "wallet-address-validator": "^0.2.0"
-  }
+    "wallet-address-validator": "^0.2.1"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "8.10.1",
+    "@types/node": "^8.0.57",
+    "serverless-offline": "^3.25.17",
+    "serverless-webpack": "^5.2.0",
+    "source-map-support": "^0.5.6",
+    "ts-loader": "^4.2.0",
+    "typescript": "^2.9.2",
+    "webpack": "^4.20.2"
+  },
+  "author": "The serverless webpack authors (https://github.com/elastic-coders/serverless-webpack)",
+  "license": "MIT"
 }
